@@ -1,4 +1,4 @@
-// Copyright 2022 Áron Svastits
+// Copyright 2023 Erik Fazakas
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef IIQKA_MOVEIT_EXAMPLE__MOVEIT_EXAMPLE_HPP_
-#define IIQKA_MOVEIT_EXAMPLE__MOVEIT_EXAMPLE_HPP_
+#ifndef IIQKA_MOVEIT_WELDING__MOVEIT_WELDING_HPP_
+#define IIQKA_MOVEIT_WELDING__MOVEIT_WELDING_HPP_
 
 #include <math.h>
 
@@ -28,10 +28,10 @@
 #include "moveit_visual_tools/moveit_visual_tools.h"
 #include "geometry_msgs/msg/vector3.hpp"
 
-class MoveitExample : public rclcpp::Node
+class MoveitWelding : public rclcpp::Node
 {
 public:
-  MoveitExample()
+  MoveitWelding()
   : rclcpp::Node("moveit_example")
   {
   }
@@ -344,4 +344,4 @@ protected:
   const std::string PLANNING_GROUP = "manipulator";
 };
 
-#endif  // IIQKA_MOVEIT_EXAMPLE__MOVEIT_EXAMPLE_HPP_
+#endif  // IIQKA_MOVEIT_WELDING__MOVEIT_WELDING_HPP_

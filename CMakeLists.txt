@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(kuka_robot_welding)
+project(iiqka_moveit_welding)
 
 # Common cmake code applied to all moveit packages
 find_package(moveit_common REQUIRED)
@@ -22,8 +22,8 @@ find_package(kuka_driver_interfaces REQUIRED)
 
 include_directories(include)
 
-add_executable(moveit_robot_welding src/MoveitRobotWelding.cpp)
-ament_target_dependencies(moveit_robot_welding
+add_executable(iiqka_moveit_welding src/MoveitWelding.cpp)
+ament_target_dependencies(iiqka_moveit_welding
   moveit_ros_planning_interface
   rclcpp
   rviz_visual_tools
@@ -32,7 +32,7 @@ ament_target_dependencies(moveit_robot_welding
 )
 
 install(TARGETS
-  moveit_robot_welding
+iiqka_moveit_welding
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME}
 )

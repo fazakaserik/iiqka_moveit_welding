@@ -16,7 +16,7 @@
 
 #include <memory>
 
-#include "kuka_robot_welding/kuka_robot_welding.hpp"
+#include "iiqka_moveit_welding/moveit_welding.hpp"
 
 
 int main(int argc, char * argv[])
@@ -24,19 +24,19 @@ int main(int argc, char * argv[])
   // Setup
   // Initialize ROS and create the Node
   rclcpp::init(argc, argv);
-  auto const example_node = std::make_shared<MoveitExample>();
+  auto const welding_node = std::make_shared<MoveitWelding>();
   rclcpp::executors::SingleThreadedExecutor executor;
-  executor.add_node(example_node);
+  executor.add_node(welding_node);
   std::thread(
     [&executor]()
     {executor.spin();})
   .detach();
 
-  example_node->initialize();
-  example_node->addBreakPoint();
+  welding_node->initialize();
+  welding_node->addBreakPoint();
 
   // Add robot platform
-  example_node->addRobotPlatform();
+  welding_node->addRobotPlatform();
 
   // Pilz PTP planner
   auto standing_pose = Eigen::Isometry3d(
@@ -45,15 +45,15 @@ int main(int argc, char * argv[])
       0.8) *
     Eigen::Quaterniond::Identity());
 
-  auto planned_trajectory = example_node->planToPoint(
+  auto planned_trajectory = welding_node->planToPoint(
     standing_pose,
     "pilz_industrial_motion_planner", "PTP");
   if (planned_trajectory != nullptr) {
-    example_node->drawTrajectory(*planned_trajectory);
-    example_node->addBreakPoint();
-    example_node->moveGroupInterface()->execute(*planned_trajectory);
+    welding_node->drawTrajectory(*planned_trajectory);
+    welding_node->addBreakPoint();
+    welding_node->moveGroupInterface()->execute(*planned_trajectory);
   }
-  example_node->addBreakPoint();
+  welding_node->addBreakPoint();
 
   // Pilz LIN planner
   auto cart_goal = Eigen::Isometry3d(
@@ -62,40 +62,40 @@ int main(int argc, char * argv[])
       0.55) *
     Eigen::Quaterniond::Identity());
   planned_trajectory =
-    example_node->planToPoint(cart_goal, "pilz_industrial_motion_planner", "LIN");
+    welding_node->planToPoint(cart_goal, "pilz_industrial_motion_planner", "LIN");
   if (planned_trajectory != nullptr) {
-    example_node->drawTrajectory(*planned_trajectory);
-    example_node->addBreakPoint();
-    example_node->moveGroupInterface()->execute(*planned_trajectory);
+    welding_node->drawTrajectory(*planned_trajectory);
+    welding_node->addBreakPoint();
+    welding_node->moveGroupInterface()->execute(*planned_trajectory);
   }
 
   // Add collision object
-  example_node->addCollisionBox(
+  welding_node->addCollisionBox(
     geometry_msgs::build<geometry_msgs::msg::Vector3>().x(0.25).y(-0.075).z(0.675),
     geometry_msgs::build<geometry_msgs::msg::Vector3>().x(0.1).y(0.4).z(0.1));
-  example_node->addBreakPoint();
+  welding_node->addBreakPoint();
 
   // Try moving back with Pilz LIN
-  planned_trajectory = example_node->planToPoint(
+  planned_trajectory = welding_node->planToPoint(
     standing_pose, "pilz_industrial_motion_planner",
     "LIN");
   if (planned_trajectory != nullptr) {
-    example_node->drawTrajectory(*planned_trajectory);
+    welding_node->drawTrajectory(*planned_trajectory);
   } else {
-    example_node->drawTitle("Failed planning with Pilz LIN");
+    welding_node->drawTitle("Failed planning with Pilz LIN");
   }
-  example_node->addBreakPoint();
+  welding_node->addBreakPoint();
 
   // Try moving back with Pilz PTP
-  planned_trajectory = example_node->planToPoint(
+  planned_trajectory = welding_node->planToPoint(
     standing_pose, "pilz_industrial_motion_planner",
     "PTP");
   if (planned_trajectory != nullptr) {
-    example_node->drawTrajectory(*planned_trajectory);
+    welding_node->drawTrajectory(*planned_trajectory);
   } else {
-    example_node->drawTitle("Failed planning with Pilz PTP");
+    welding_node->drawTitle("Failed planning with Pilz PTP");
   }
-  example_node->addBreakPoint();
+  welding_node->addBreakPoint();
 
   // Shutdown ROS
   rclcpp::shutdown();
