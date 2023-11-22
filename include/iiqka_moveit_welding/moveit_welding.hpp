@@ -46,7 +46,7 @@ public:
       shared_from_this(), "base_link", rviz_visual_tools::RVIZ_MARKER_TOPIC,
       move_group_interface_->getRobotModel());
 
-    moveit_visual_tools_->deleteAllMarkers();
+    // moveit_visual_tools_->deleteAllMarkers();
     moveit_visual_tools_->loadRemoteControl();
     moveit_visual_tools_->trigger();
 

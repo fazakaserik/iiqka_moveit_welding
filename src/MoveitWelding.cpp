@@ -41,8 +41,7 @@ int main(int argc, char * argv[])
   // Pilz PTP planner
   auto standing_pose = Eigen::Isometry3d(
     Eigen::Translation3d(
-      0.1, 0,
-      0.8) *
+      0.1, 0.2,  0.8) *
     Eigen::Quaterniond::Identity());
 
   auto planned_trajectory = welding_node->planToPoint(
