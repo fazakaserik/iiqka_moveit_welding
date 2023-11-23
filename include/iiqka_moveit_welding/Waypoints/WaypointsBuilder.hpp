@@ -1,18 +1,25 @@
+#pragma once
+
 #include "Waypoints.hpp"
-#include "IMotion.hpp"
+#include "../Motion/IMotion.hpp"
 
 class WaypointsBuilder
 {
 private:
     Waypoints waypoints_;
+    uint steps_;
 
 public:
-    WaypointsBuilder& addMotion(IMotion& motion) {
-        motion.apply(waypoints_.waypoints);
+    WaypointsBuilder(uint steps) : steps_(steps) {}
+
+    WaypointsBuilder& addMotion(IMotion& motion) 
+    {
+        motion.apply(waypoints_.vector, steps_);
         return *this;
     }
 
-    Waypoints build() {
+    Waypoints build() 
+    {
         return waypoints_;
     }
 };

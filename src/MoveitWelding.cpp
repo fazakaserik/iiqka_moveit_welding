@@ -41,73 +41,33 @@ int main(int argc, char * argv[])
   // Welding
 
   // Initialize the start pose
-  geometry_msgs::msg::Pose start;
-  start.position.x = 1.0;  // X coordinate
-  start.position.y = 0.0;  // Y coordinate
-  start.position.z = 0.5;  // Z coordinate
+  geometry_msgs::msg::Pose goal;
+  goal.position.x = 0.1;  // X coordinate
+  goal.position.y = 0.2;  // Y coordinate
+  goal.position.z = 0.8;  // Z coordinate
 
   // For simplicity, we'll use a default orientation (no rotation)
-  start.orientation.x = 0.0;
-  start.orientation.y = 0.0;
-  start.orientation.z = 0.0;
-  start.orientation.w = 1.0; // Represents no rotation
+  goal.orientation.x = 0.0;
+  goal.orientation.y = 0.0;
+  goal.orientation.z = 0.0;
+  goal.orientation.w = 1.0; // Represents no rotation
 
-  // Initialize the end pose
-  geometry_msgs::msg::Pose end;
-  end.position.x = 2.0; // X coordinate
-  end.position.y = 1.0; // Y coordinate
-  end.position.z = 0.5; // Z coordinate
+  LinearMotion linearMotion(goal);
+  SinusoidalMotion sinusoidalMotion(0.5, 1.0);
 
-  // Let's say the end pose also has no rotation
-  end.orientation.x = 0.0;
-  end.orientation.y = 0.0;
-  end.orientation.z = 0.0;
-  end.orientation.w = 1.0; // Represents no rotation
-
-  WaypointsBuilder builder;
-
-  LinearMotion linearMotion(start, end, 10);
-  SinusoidalMotion sinusoidalMotion(0.5, 1.0, 10);
-
-  builder.addMotion(linearMotion)
-          .addMotion(sinusoidalMotion);
+  WaypointsBuilder builder(10);
+  
+  builder.addMotion(linearMotion);
+  //       .addMotion(sinusoidalMotion);
 
   Waypoints waypoints = builder.build();
 
-  moveit_msgs::msg::RobotTrajectory combined_trajectory;
+  auto trajectory = welding_node->planFromWaypoints(waypoints);
 
-  for (const auto& waypoint : waypoints.waypoints) {
-      auto sub_trajectory_ptr = welding_node->planToPoint(waypoint, "pilz_industrial_motion_planner", "PTP");
-
-      if (sub_trajectory_ptr) {
-          const auto& sub_trajectory = *sub_trajectory_ptr;
-
-          // If combined_trajectory is empty, initialize it with the first sub_trajectory's joint names
-          if (combined_trajectory.joint_trajectory.joint_names.empty()) {
-              combined_trajectory.joint_trajectory.joint_names = sub_trajectory.joint_trajectory.joint_names;
-          }
-
-          // Append each point from sub_trajectory to combined_trajectory
-          for (const auto& point : sub_trajectory.joint_trajectory.points) {
-              auto adjusted_point = point;
-
-              // Adjust time_from_start by adding the duration of the combined_trajectory
-              if (!combined_trajectory.joint_trajectory.points.empty()) {
-                  adjusted_point.time_from_start += combined_trajectory.joint_trajectory.points.back().time_from_start;
-              }
-
-              combined_trajectory.joint_trajectory.points.push_back(adjusted_point);
-          }
-      } else {
-          RCLCPP_INFO(LOGGER, "Sub-trajectory planning failed for a waypoint");
-          // Handle the failure case (e.g., stop the loop, throw an exception, etc.)
-      }
-  }
-
-  if (combined_trajectory != nullptr) {
-    welding_node->drawTrajectory(*combined_trajectory);
+  if (trajectory != nullptr) {
+    welding_node->drawTrajectory(*trajectory);
     welding_node->addBreakPoint();
-    welding_node->moveGroupInterface()->execute(*combined_trajectory);
+    welding_node->moveGroupInterface()->execute(*trajectory);
   }
 
   // Shutdown ROS

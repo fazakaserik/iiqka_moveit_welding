@@ -28,6 +28,8 @@
 #include "moveit_visual_tools/moveit_visual_tools.h"
 #include "geometry_msgs/msg/vector3.hpp"
 
+#include "Waypoints/Waypoints.hpp"
+
 class MoveitWelding : public rclcpp::Node
 {
 public:
@@ -55,6 +57,35 @@ public:
 
     move_group_interface_->setMaxVelocityScalingFactor(0.1);
     move_group_interface_->setMaxAccelerationScalingFactor(0.1);
+  }
+
+  moveit_msgs::msg::RobotTrajectory::SharedPtr planFromWaypoints(
+    Waypoints& waypoints
+    )
+  {
+    moveit_msgs::msg::RobotTrajectory trajectory;
+
+    RCLCPP_INFO(LOGGER, "Start planning");
+    int i = 0;
+    for (auto waypoint : waypoints.vector)
+    {
+        RCLCPP_INFO(LOGGER, "Waypoint %d", i);
+        RCLCPP_INFO(LOGGER, "%d", waypoint.position.x);
+        RCLCPP_INFO(LOGGER, "%d", waypoint.position.y);
+        RCLCPP_INFO(LOGGER, "%d", waypoint.position.z);
+        i++;
+    }
+
+    double fraction =
+      move_group_interface_->computeCartesianPath(waypoints.vector, 0.005, 0.0, trajectory);
+
+    if (fraction < 1) {
+      RCLCPP_ERROR(LOGGER, "Could not compute trajectory through all waypoints!");
+      return nullptr;
+    } else {
+      RCLCPP_INFO(LOGGER, "Planning done!");
+      return std::make_shared<moveit_msgs::msg::RobotTrajectory>(trajectory);
+    }
   }
 
   moveit_msgs::msg::RobotTrajectory::SharedPtr drawCircle()
