@@ -8,6 +8,6 @@
 class IMotion
 {
 public:
-    virtual void apply(Waypoints& waypoints, uint steps) = 0;
+    virtual void apply(Waypoints& waypoints) = 0;
     virtual ~IMotion() {}
 };

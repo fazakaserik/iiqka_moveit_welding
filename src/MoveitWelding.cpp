@@ -42,9 +42,9 @@ int main(int argc, char * argv[])
 
   // Initialize the start pose
   geometry_msgs::msg::Pose goal;
-  goal.position.x = 0.1;  // X coordinate
-  goal.position.y = 0.2;  // Y coordinate
-  goal.position.z = 0.8;  // Z coordinate
+  goal.position.x = 0.42;  // X coordinate
+  goal.position.y = 0.0;  // Y coordinate
+  goal.position.z = 0.0;  // Z coordinate
 
   // For simplicity, we'll use a default orientation (no rotation)
   goal.orientation.x = 0.0;
@@ -57,8 +57,8 @@ int main(int argc, char * argv[])
 
   WaypointsBuilder builder(10);
   
-  //builder.addMotion(linearMotion);
-  builder.addMotion(sinusoidalMotion);
+  builder.addMotion(linearMotion)
+         .addMotion(sinusoidalMotion);
 
   Waypoints waypoints = builder.build();
 

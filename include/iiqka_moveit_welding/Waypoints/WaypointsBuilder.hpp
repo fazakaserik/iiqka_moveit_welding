@@ -7,14 +7,16 @@ class WaypointsBuilder
 {
 private:
     Waypoints waypoints_;
-    uint steps_;
 
 public:
-    WaypointsBuilder(uint steps) : steps_(steps) {}
+    WaypointsBuilder(uint steps)
+    {
+        waypoints_.set_zeros(steps);
+    }
 
     WaypointsBuilder& addMotion(IMotion& motion) 
     {
-        motion.apply(waypoints_, steps_);
+        motion.apply(waypoints_);
         return *this;
     }
 

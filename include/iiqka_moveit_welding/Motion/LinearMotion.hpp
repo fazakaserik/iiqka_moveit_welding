@@ -15,16 +15,15 @@ public:
     LinearMotion(const geometry_msgs::msg::Pose& goal)
         : goal_(goal) {}
 
-    void apply(Waypoints& waypoints, uint steps) override 
+    void apply(Waypoints& waypoints) override 
     {
-        for (uint i = 0; i <= steps; i++) {
-            double t = static_cast<double>(i) / steps;
-            geometry_msgs::msg::Pose waypoint;
-            waypoint.position.x = t * goal_.position.x;
-            waypoint.position.y = t * goal_.position.y;
-            waypoint.position.z = t * goal_.position.z;
-            // Add orientation interpolation if needed
-            waypoints.vector.push_back(waypoint);
+        size_t vector_size = waypoints.vector.size();
+
+        for (uint i = 0; i < vector_size; i++) {
+            double t = static_cast<double>(i+1) / vector_size; // Motion should begin at i=0, thus using i+1
+            waypoints.vector.at(i).position.x += t * goal_.position.x;
+            waypoints.vector.at(i).position.y += t * goal_.position.y;
+            waypoints.vector.at(i).position.z += t * goal_.position.z;
         }
     }
 };
