@@ -57,8 +57,8 @@ int main(int argc, char * argv[])
 
   WaypointsBuilder builder(10);
   
-  builder.addMotion(linearMotion);
-  //       .addMotion(sinusoidalMotion);
+  //builder.addMotion(linearMotion);
+  builder.addMotion(sinusoidalMotion);
 
   Waypoints waypoints = builder.build();
 

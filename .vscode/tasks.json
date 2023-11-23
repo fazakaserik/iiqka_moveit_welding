@@ -1,0 +1,17 @@
+{
+    "tasks": [
+        {
+            "label": "debug_server",
+            "command": "source /opt/ros/foxy/setup.bash && colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug &&source /home/rosuser/ros2_ws/local_setup.bash && ros2 run --prefix 'gdbserver localhost:3000' iiqka_moveit_welding iiqka_moveit_welding", 
+            "type": "shell",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        }
+    ]
+}

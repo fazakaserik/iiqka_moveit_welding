@@ -70,14 +70,13 @@ public:
     for (auto waypoint : waypoints.vector)
     {
         RCLCPP_INFO(LOGGER, "Waypoint %d", i);
-        RCLCPP_INFO(LOGGER, "%d", waypoint.position.x);
-        RCLCPP_INFO(LOGGER, "%d", waypoint.position.y);
-        RCLCPP_INFO(LOGGER, "%d", waypoint.position.z);
+        RCLCPP_INFO(LOGGER, "%f", waypoint.position.x);
+        RCLCPP_INFO(LOGGER, "%f", waypoint.position.y);
+        RCLCPP_INFO(LOGGER, "%f", waypoint.position.z);
         i++;
     }
 
-    double fraction =
-      move_group_interface_->computeCartesianPath(waypoints.vector, 0.005, 0.0, trajectory);
+    double fraction = move_group_interface_->computeCartesianPath(waypoints.vector, 0.005, 0.0, trajectory);
 
     if (fraction < 1) {
       RCLCPP_ERROR(LOGGER, "Could not compute trajectory through all waypoints!");

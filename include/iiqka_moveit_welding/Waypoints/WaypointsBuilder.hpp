@@ -14,7 +14,7 @@ public:
 
     WaypointsBuilder& addMotion(IMotion& motion) 
     {
-        motion.apply(waypoints_.vector, steps_);
+        motion.apply(waypoints_, steps_);
         return *this;
     }
 
