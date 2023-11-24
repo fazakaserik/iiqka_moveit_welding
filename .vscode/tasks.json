@@ -1,17 +1,41 @@
 {
+    "version": "2.0.0",
     "tasks": [
         {
-            "label": "debug_server",
-            "command": "source /opt/ros/foxy/setup.bash && colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug &&source /home/rosuser/ros2_ws/local_setup.bash && ros2 run --prefix 'gdbserver localhost:3000' iiqka_moveit_welding iiqka_moveit_welding", 
+            "label": "Build iiqka_moveit_welding",
             "type": "shell",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false
-            }
+            "command": "echo 'Building package...' && colcon build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Lifecycle configure & activate iiqka_moveit_welding",
+            "type": "shell",
+            "command": "ros2 lifecycle set robot_manager configure && ros2 lifecycle set robot_manager activate",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Launch iiqka_moveit_welding",
+            "type": "shell",
+            "command": "echo 'Sourcing package...' && source install/setup.bash && echo 'Launching RViz...' && ros2 launch iiqka_moveit_welding moveit_welding_planning.launch.py",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run iiqka_moveit_welding",
+            "type": "shell",
+            "command": "echo 'Sourcing package...' && source install/setup.bash && echo 'Running node...' && ros2 run iiqka_moveit_welding iiqka_moveit_welding",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
         }
     ]
 }

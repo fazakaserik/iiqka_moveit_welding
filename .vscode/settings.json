@@ -2,6 +2,8 @@
     "python.autoComplete.extraPaths": [
         "/home/rosuser/ros2_ws/install/kuka_rsi_simulator/lib/python3.10/site-packages",
         "/home/rosuser/ros2_ws/install/kuka_driver_interfaces/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages",
         "/home/rosuser/ros2_humble/build/rqt_bag_plugins/src",
         "/home/rosuser/ros2_humble/install/rqt_bag_plugins/lib/python3.10/site-packages",
         "/home/rosuser/ros2_humble/build/rqt_bag/src",
@@ -241,13 +243,13 @@
         "/home/rosuser/ros2_humble/build/ament_clang_tidy",
         "/home/rosuser/ros2_humble/install/ament_clang_tidy/lib/python3.10/site-packages",
         "/home/rosuser/ros2_humble/build/ament_clang_format",
-        "/home/rosuser/ros2_humble/install/ament_clang_format/lib/python3.10/site-packages",
-        "/opt/ros/humble/lib/python3.10/site-packages",
-        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+        "/home/rosuser/ros2_humble/install/ament_clang_format/lib/python3.10/site-packages"
     ],
     "python.analysis.extraPaths": [
         "/home/rosuser/ros2_ws/install/kuka_rsi_simulator/lib/python3.10/site-packages",
         "/home/rosuser/ros2_ws/install/kuka_driver_interfaces/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages",
         "/home/rosuser/ros2_humble/build/rqt_bag_plugins/src",
         "/home/rosuser/ros2_humble/install/rqt_bag_plugins/lib/python3.10/site-packages",
         "/home/rosuser/ros2_humble/build/rqt_bag/src",
@@ -487,9 +489,7 @@
         "/home/rosuser/ros2_humble/build/ament_clang_tidy",
         "/home/rosuser/ros2_humble/install/ament_clang_tidy/lib/python3.10/site-packages",
         "/home/rosuser/ros2_humble/build/ament_clang_format",
-        "/home/rosuser/ros2_humble/install/ament_clang_format/lib/python3.10/site-packages",
-        "/opt/ros/humble/lib/python3.10/site-packages",
-        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+        "/home/rosuser/ros2_humble/install/ament_clang_format/lib/python3.10/site-packages"
     ],
     "cmake.configureOnOpen": false,
     "files.associations": {

@@ -2,12 +2,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "C++ Debugger",
+            "name": "Build and Source",
+            "type": "shell",
             "request": "launch",
-            "type": "cppdbg",
-            "miDebuggerServerAddress": "localhost:3000",
-            "cwd": "/",
-            "program": "/home/rosuser/ros2_ws/src/kuka_robot_welding/install/iiqka_moveit_welding/lib/iiqka_moveit_welding/iiqka_moveit_welding"
+            "command": "${command:workbench.action.tasks.runTask} 'build_and_source'"
         }
     ]
 }
+
+
