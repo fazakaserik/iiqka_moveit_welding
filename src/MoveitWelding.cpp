@@ -51,7 +51,6 @@ int main(int argc, char * argv[])
                                                             )
                                                             );
   
-  welding_node
   auto planned_trajectory = 
           welding_node->planToPoint(pos1,
                                     "pilz_industrial_motion_planner", 

@@ -119,6 +119,7 @@ public:
     geometry_msgs::msg::Pose msg;
 
     // circle facing forward
+    
     msg.orientation.x = 0;
     msg.orientation.y = 1;
     msg.orientation.z = 0;
