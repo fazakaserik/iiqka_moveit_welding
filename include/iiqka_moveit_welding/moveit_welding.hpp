@@ -120,15 +120,15 @@ public:
 
     // circle facing forward
     msg.orientation.x = 0;
-    msg.orientation.y = 0;
+    msg.orientation.y = 1;
     msg.orientation.z = 0;
-    msg.orientation.w = 1;
-    msg.position.z = 0.8;
+    msg.orientation.w = 0;
+    msg.position.z = 0.1;
     // Define waypoints in a circle
-    double circle_resolution = 80;
+    double circle_resolution = 200;
     for (double i = 0; i < circle_resolution; i++) {
-      msg.position.y = 0.0 + 0.01*cos(15*6.28*i/circle_resolution);
-      msg.position.x = -0.3 + 0.1*0.3*i/circle_resolution; // linear only so far
+      msg.position.y = 0.5 + 0.01*cos(100*6.28*i/circle_resolution);
+      msg.position.x = -0.5 + 1.3*i/circle_resolution; // linear only so far
       
       waypoints.push_back(msg);
     }

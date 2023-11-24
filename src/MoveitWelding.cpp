@@ -44,10 +44,14 @@ int main(int argc, char * argv[])
 
   // Pilz PTP planner START \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\qqqqq
   auto pos1 = Eigen::Isometry3d(
-    Eigen::Translation3d(
-      0.1, 0,
-      0.8) *
-    Eigen::Quaterniond::Identity());
+    Eigen::Translation3d(-0.5, 0, 0.8) * Eigen::Quaterniond( 0,
+                                                            0,
+                                                            1,
+                                                            0
+                                                            )
+                                                            );
+  
+  welding_node
   auto planned_trajectory = 
           welding_node->planToPoint(pos1,
                                     "pilz_industrial_motion_planner", 
@@ -63,15 +67,14 @@ int main(int argc, char * argv[])
 
   // MOVE TO LOCATION 2 START \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\qqqqq
    auto pos_2 = Eigen::Isometry3d(
-    Eigen::Translation3d(
-      -0.3, 0,
-      1) *
-    Eigen::Quaterniond(0,0,0,1));
-    
+    Eigen::Translation3d(-0.5, 0.5,0.15) *  Eigen::Quaterniond(  0,
+                                                                0,
+                                                                1,
+                                                                0 ));
   planned_trajectory = 
           welding_node->planToPoint(pos_2,
                                     "pilz_industrial_motion_planner", 
-                                    "PTP");
+                                    "LIN");
 
   if (planned_trajectory != nullptr) {
     welding_node->drawTrajectory(*planned_trajectory);
@@ -79,7 +82,7 @@ int main(int argc, char * argv[])
     welding_node->moveGroupInterface()->execute(*planned_trajectory);
   }
   // MOVE TO LOCATION 2 END //////////////////////////////////////////////////////////////////////////
-   welding_node->addBreakPoint();
+  // welding_node->addBreakPoint();
 
    // MOVE TO LOCATION 3  CIRCLE START \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\qqqqq
   
@@ -89,12 +92,47 @@ int main(int argc, char * argv[])
   
   if (planned_trajectory != nullptr) {
     welding_node->drawTrajectory(*planned_trajectory);
-    welding_node->addBreakPoint();
+    //welding_node->addBreakPoint();
     welding_node->moveGroupInterface()->execute(*planned_trajectory);
   }
   // MOVE TO LOCATION 3 CIRCLE  END //////////////////////////////////////////////////////////////////////////
 
-  // MOVE TO LOCATION 1 CIRCLE  START \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+  // MOVE BACK START \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+  
+  auto pos_3 = Eigen::Isometry3d(
+    Eigen::Translation3d(0.8, 0.5*50*0.01,0.25) *  Eigen::Quaterniond(  0,
+                                                                        0,
+                                                                        1,
+                                                                        0 ));
+  planned_trajectory = 
+          welding_node->planToPoint(pos_3,
+                                    "pilz_industrial_motion_planner", 
+                                    "LIN");
+
+  if (planned_trajectory != nullptr) {
+    welding_node->drawTrajectory(*planned_trajectory);
+    //welding_node->addBreakPoint();
+    welding_node->moveGroupInterface()->execute(*planned_trajectory);
+  }
+
+   auto pos_4 = Eigen::Isometry3d(
+    Eigen::Translation3d(-0.5, 0.5,0.25) *  Eigen::Quaterniond(  0,
+                                                                0,
+                                                                1,
+                                                                0 ));
+  planned_trajectory = 
+          welding_node->planToPoint(pos_4,
+                                    "pilz_industrial_motion_planner", 
+                                    "LIN");
+
+  if (planned_trajectory != nullptr) {
+    welding_node->drawTrajectory(*planned_trajectory);
+    //welding_node->addBreakPoint();
+    welding_node->moveGroupInterface()->execute(*planned_trajectory);
+  }
+  // MOVE BACK END //////////////////////////////////////////////////////////////
+
+  // MOVE TO LOCATION 1   START \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
   planned_trajectory = 
