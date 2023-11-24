@@ -38,33 +38,44 @@ public:
   {
   }
 
+  /**
+   * FUNC:  initialize()
+  */
+
   void initialize()
   {
     move_group_interface_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>(
-      shared_from_this(),
-      PLANNING_GROUP);
+                                                                                              shared_from_this(),
+                                                                                              PLANNING_GROUP);
 
-    moveit_visual_tools_ = std::make_shared<moveit_visual_tools::MoveItVisualTools>(
-      shared_from_this(), "base_link", rviz_visual_tools::RVIZ_MARKER_TOPIC,
-      move_group_interface_->getRobotModel());
+    moveit_visual_tools_ = std::make_shared
+      <moveit_visual_tools::MoveItVisualTools>(
+                                                shared_from_this(), "base_link", rviz_visual_tools::RVIZ_MARKER_TOPIC,
+                                                move_group_interface_->getRobotModel());
 
     // moveit_visual_tools_->deleteAllMarkers();
     moveit_visual_tools_->loadRemoteControl();
     moveit_visual_tools_->trigger();
 
-    planning_scene_diff_publisher_ = this->create_publisher<moveit_msgs::msg::PlanningScene>(
-      "planning_scene", 10);
+    planning_scene_diff_publisher_ = 
+      this->create_publisher<moveit_msgs::msg::PlanningScene>(
+                                                            "planning_scene",
+                                                            10);
 
     move_group_interface_->setMaxVelocityScalingFactor(0.1);
     move_group_interface_->setMaxAccelerationScalingFactor(0.1);
+    
   }
 
-  moveit_msgs::msg::RobotTrajectory::SharedPtr planFromWaypoints(
-    Waypoints& waypoints
-    )
+  /**
+   * FUNC:  planFromWaypoints(Waypoints& waypoints)
+  */
+  moveit_msgs::msg::RobotTrajectory::SharedPtr 
+          planFromWaypoints(Waypoints& waypoints)
   {
-    moveit_msgs::msg::RobotTrajectory trajectory;
+    
 
+    // debug messages
     RCLCPP_INFO(LOGGER, "Start planning");
     int i = 0;
     for (auto waypoint : waypoints.vector)
@@ -76,49 +87,73 @@ public:
         i++;
     }
 
-    double fraction = move_group_interface_->computeCartesianPath(waypoints.vector, 0.005, 0.0, trajectory);
+    moveit_msgs::msg::RobotTrajectory trajectory;
+    // planning
+    //params:
+    double    eef_step_d        = 0.1; // number of meters per stepps while moving
+    double  jump_threshold_d  = 5.0; // max number of change 
+    bool    avoid_coll_b      = false;
+    double fraction =  move_group_interface_->computeCartesianPath(
+                                                    waypoints.vector, 
+                                                    eef_step_d, 
+                                                    jump_threshold_d, 
+                                                    trajectory,
+                                                    avoid_coll_b);
 
     if (fraction < 1) {
       RCLCPP_ERROR(LOGGER, "Could not compute trajectory through all waypoints!");
+      RCLCPP_ERROR(LOGGER,"%lf",fraction);
       return nullptr;
-    } else {
-      RCLCPP_INFO(LOGGER, "Planning done!");
-      return std::make_shared<moveit_msgs::msg::RobotTrajectory>(trajectory);
     }
+    RCLCPP_INFO(LOGGER, "Planning done!");
+    return std::make_shared<moveit_msgs::msg::RobotTrajectory>(trajectory);
   }
 
-  moveit_msgs::msg::RobotTrajectory::SharedPtr drawCircle()
+  /**
+   * FUNC:  drawCircle()
+  */
+  moveit_msgs::msg::RobotTrajectory::SharedPtr draw_sin_wave()
   {
     std::vector<geometry_msgs::msg::Pose> waypoints;
     moveit_msgs::msg::RobotTrajectory trajectory;
     geometry_msgs::msg::Pose msg;
 
     // circle facing forward
-    msg.orientation.x = 0.0;
-    msg.orientation.y = sqrt(2) / 2;
-    msg.orientation.z = 0.0;
-    msg.orientation.w = sqrt(2) / 2;
-    msg.position.x = 0.4;
+    msg.orientation.x = 0;
+    msg.orientation.y = 0;
+    msg.orientation.z = 0;
+    msg.orientation.w = 1;
+    msg.position.z = 0.8;
     // Define waypoints in a circle
-    for (int i = 0; i < 63; i++) {
-      msg.position.y = -0.2 + sin(0.1 * i) * 0.15;
-      msg.position.z = 0.4 + cos(0.1 * i) * 0.15;
+    double circle_resolution = 80;
+    for (double i = 0; i < circle_resolution; i++) {
+      msg.position.y = 0.0 + 0.01*cos(15*6.28*i/circle_resolution);
+      msg.position.x = -0.3 + 0.1*0.3*i/circle_resolution; // linear only so far
+      
       waypoints.push_back(msg);
     }
+    
+  
+
+    
 
     RCLCPP_INFO(LOGGER, "Start planning");
     double fraction =
-      move_group_interface_->computeCartesianPath(waypoints, 0.005, 0.0, trajectory);
+      move_group_interface_->computeCartesianPath(waypoints, 0.1, 100.0, trajectory);
     RCLCPP_INFO(LOGGER, "Planning done!");
 
     if (fraction < 1) {
       RCLCPP_ERROR(LOGGER, "Could not compute trajectory through all waypoints!");
+      RCLCPP_ERROR(LOGGER,"%lf",fraction);
       return nullptr;
     } else {
       return std::make_shared<moveit_msgs::msg::RobotTrajectory>(trajectory);
     }
   }
 
+  /**
+  * FUNC:  planToPoint()
+  */
   moveit_msgs::msg::RobotTrajectory::SharedPtr planToPoint(
     const Eigen::Isometry3d & pose,
     const std::string & planning_pipeline = "pilz_industrial_motion_planner",

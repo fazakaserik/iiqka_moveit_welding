@@ -24,7 +24,7 @@
 
 int main(int argc, char * argv[])
 {
-  // Setup
+  // SETUP START
   // Initialize ROS and create the Node
   rclcpp::init(argc, argv);
   auto const welding_node = std::make_shared<MoveitWelding>();
@@ -36,49 +36,92 @@ int main(int argc, char * argv[])
   .detach();
 
   welding_node->initialize();
-  welding_node->addBreakPoint();
+  //welding_node->addBreakPoint();
 
-  // Welding
+  // Add robot platform
+  welding_node->addRobotPlatform();
+  // SETUP END
 
-  // Initialize the start pose
-  geometry_msgs::msg::Pose goal;
-  goal.position.x = 0.42;  // X coordinate
-  goal.position.y = 0.0;  // Y coordinate
-  goal.position.z = 0.0;  // Z coordinate
+  // Pilz PTP planner START \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\qqqqq
+  auto pos1 = Eigen::Isometry3d(
+    Eigen::Translation3d(
+      0.1, 0,
+      0.8) *
+    Eigen::Quaterniond::Identity());
+  auto planned_trajectory = 
+          welding_node->planToPoint(pos1,
+                                    "pilz_industrial_motion_planner", 
+                                    "PTP");
 
-  // For simplicity, we'll use a default orientation (no rotation)
-  goal.orientation.x = 0.0;
-  goal.orientation.y = 0.0;
-  goal.orientation.z = 0.0;
-  goal.orientation.w = 1.0; // Represents no rotation
-
-  LinearMotion linearMotion(goal);
-  SinusoidalMotion sinusoidalMotion(0.5, 1.0);
-
-  WaypointsBuilder builder(10);
-  
-  builder.addMotion(linearMotion)
-         .addMotion(sinusoidalMotion);
-
-  Waypoints waypoints = builder.build();
-
-  auto trajectory = welding_node->planFromWaypoints(waypoints);
-
-  if (trajectory != nullptr) {
-    welding_node->drawTrajectory(*trajectory);
-    welding_node->addBreakPoint();
-    welding_node->moveGroupInterface()->execute(*trajectory);
+  if (planned_trajectory != nullptr) {
+    welding_node->drawTrajectory(*planned_trajectory);
+    //welding_node->addBreakPoint();
+    welding_node->moveGroupInterface()->execute(*planned_trajectory);
   }
+  // Pilz PTP planner END //////////////////////////////////////////////////////////////////////////
+   //welding_node->addBreakPoint();
+
+  // MOVE TO LOCATION 2 START \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\qqqqq
+   auto pos_2 = Eigen::Isometry3d(
+    Eigen::Translation3d(
+      -0.3, 0,
+      1) *
+    Eigen::Quaterniond(0,0,0,1));
+    
+  planned_trajectory = 
+          welding_node->planToPoint(pos_2,
+                                    "pilz_industrial_motion_planner", 
+                                    "PTP");
+
+  if (planned_trajectory != nullptr) {
+    welding_node->drawTrajectory(*planned_trajectory);
+    //welding_node->addBreakPoint();
+    welding_node->moveGroupInterface()->execute(*planned_trajectory);
+  }
+  // MOVE TO LOCATION 2 END //////////////////////////////////////////////////////////////////////////
+   welding_node->addBreakPoint();
+
+   // MOVE TO LOCATION 3  CIRCLE START \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\qqqqq
+  
+  // set orienattion constraint!!!
+
+  planned_trajectory = welding_node->draw_sin_wave();
+  
+  if (planned_trajectory != nullptr) {
+    welding_node->drawTrajectory(*planned_trajectory);
+    welding_node->addBreakPoint();
+    welding_node->moveGroupInterface()->execute(*planned_trajectory);
+  }
+  // MOVE TO LOCATION 3 CIRCLE  END //////////////////////////////////////////////////////////////////////////
+
+  // MOVE TO LOCATION 1 CIRCLE  START \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+  planned_trajectory = 
+          welding_node->planToPoint(pos1,
+                                    "pilz_industrial_motion_planner", 
+                                    "PTP");
+
+  if (planned_trajectory != nullptr) {
+    welding_node->drawTrajectory(*planned_trajectory);
+    //welding_node->addBreakPoint();
+    welding_node->moveGroupInterface()->execute(*planned_trajectory);
+  }
+  // MOVE TO LOCATION 1 CIRCLE  END //////////////////////////////////////////////////////////////////////////
+
 
   // Shutdown ROS
   rclcpp::shutdown();
   return 0;
 
+  // -------------------------------------------------------------------------
   // Rest of it is part of the example
-
+  /*
   // Add robot platform
   welding_node->addRobotPlatform();
-
+  //*****************************************************-
+  // EXAMPLE 1 ********************************************************-
+  //*****************************************************-
   // Pilz PTP planner
   auto standing_pose = Eigen::Isometry3d(
     Eigen::Translation3d(
@@ -95,6 +138,9 @@ int main(int argc, char * argv[])
   }
   welding_node->addBreakPoint();
 
+  //*****************************************************-
+  // EXAMPLE 2 ********************************************************-
+  //*****************************************************-
   // Pilz LIN planner
   auto cart_goal = Eigen::Isometry3d(
     Eigen::Translation3d(
@@ -140,4 +186,5 @@ int main(int argc, char * argv[])
   // Shutdown ROS
   rclcpp::shutdown();
   return 0;
+  */
 }
