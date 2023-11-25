@@ -152,6 +152,117 @@ public:
     }
   }
 
+  moveit_msgs::msg::RobotTrajectory::SharedPtr draw_line_from_A2B_with_sin(
+                                                                  const Eigen::Isometry3d & pos_A,
+                                                                  const Eigen::Isometry3d & pos_B,
+                                                                  double sin_freq,
+                                                                  double sin_amplitude,
+                                                                  double minimum_step_size)
+  { 
+    RCLCPP_INFO(LOGGER, "Start draw_line_from_A2B_with_sin()");
+    std::vector<geometry_msgs::msg::Pose> waypoints;
+    moveit_msgs::msg::RobotTrajectory trajectory;
+    geometry_msgs::msg::Pose msg;
+
+    // circle facing forward
+    double diff_x = pos_B.translation().x()-pos_A.translation().x();
+    double diff_y = pos_B.translation().y()-pos_A.translation().y();
+    double diff_z = pos_B.translation().z()-pos_A.translation().z();
+
+
+    RCLCPP_INFO(LOGGER, "dX = %lf" ,diff_x);
+    
+
+    msg.position.x =  pos_A.translation().x();
+    msg.position.y =  pos_A.translation().y();
+    msg.position.z =  pos_A.translation().z();
+
+    // Define waypoints in a line
+    
+    double resolution =sqrt(diff_x*diff_x+diff_y*diff_y+diff_z*diff_z)/minimum_step_size;
+    
+    msg.orientation.w = 0;
+    msg.orientation.x = 0;
+    msg.orientation.y = 1;
+    msg.orientation.z = 0;
+    
+
+
+    double posX_lin = pos_A.translation().x();
+    double posY_lin = pos_A.translation().y();
+    double posZ_lin = pos_A.translation().z();
+
+    double fract_X = diff_x/resolution;
+    double fract_Y = diff_y/resolution;
+    double fract_Z = diff_z/resolution;
+    
+  
+
+    double posX;
+    double posY;
+    double posZ;
+
+    
+
+    double fract_sin = 6.28*sin_freq/resolution;
+    double sin_prev =0.0;
+    double sin_val;
+    for (int i = 0; i < resolution; i++) {
+      //msg.position.y = 0.5 + 0.01*cos(100*6.28*i/resolution);
+      //msg.position.x = -0.5 + 1.3*i/resolution; // linear only so far
+      // calculat positions
+
+      //
+      
+      sin_val = sin_amplitude*sin(sin_prev);
+      sin_prev = sin_prev+fract_sin;
+      
+      auto sin = Eigen::Translation3d(0,sin_val ,0);
+      RCLCPP_INFO(LOGGER,  "sinY = %lf "  ,sin.translation().y());
+
+
+      posX =  posX_lin + (double)i*fract_X + sin.translation().x();
+      posY =  posY_lin + (double)i*fract_Y + sin.translation().y();
+      posZ =  posZ_lin + (double)i*fract_Z + sin.translation().z();
+      //asign to msg
+   
+
+
+      msg.position.x = posX;
+      msg.position.y = posY;
+      msg.position.z = posZ;
+      RCLCPP_INFO(LOGGER, "posX = %lf posY = %lf posZ =%lf"  ,msg.position.x,msg.position.y,msg.position.z);
+
+      
+     
+      //sin_amplitude*sin(6.28*sin_freq*i/resolution)
+      // auto sine = Eigen::Isometry3d(Eigen::Translation3d(0, 0,0));
+      //               //*  Eigen::Quaterniond( 1,0,0,0));
+      // msg.position.x +=  sine.translation().x();
+      // msg.position.y +=  sine.translation().y();
+      // msg.position.z +=  sine.translation().z();
+      waypoints.push_back(msg);
+    }
+    
+  
+
+    
+    move_group_interface_->setPlanningTime(5);
+    move_group_interface_->setNumPlanningAttempts(3);
+    RCLCPP_INFO(LOGGER, "Start planning");
+    double fraction =
+      move_group_interface_->computeCartesianPath(waypoints, 1, 100.0, trajectory);
+    RCLCPP_INFO(LOGGER, "Planning done!");
+
+    if (fraction < 1) {
+      RCLCPP_ERROR(LOGGER, "Could not compute trajectory through all waypoints!");
+      RCLCPP_ERROR(LOGGER,"%lf",fraction);
+      return nullptr;
+    } else {
+      return std::make_shared<moveit_msgs::msg::RobotTrajectory>(trajectory);
+    }
+  }
+
   /**
   * FUNC:  planToPoint()
   */
