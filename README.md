@@ -1,3 +1,11 @@
+# Introduction
+
+This is a homework project for a KUKA & BME-VIK collaboration lecture. The goal of this project is to plan a superposed linear and sinusoidal trajectory for welding with a KUKA LBR iisy 11 robot.
+
+<p align="center">
+  <img src="docs/images/robot_welding.png" alt="Welding Robot">
+</p>
+
 # Dependencies
 - [ROS2 Humble](https://docs.ros.org/en/humble/Installation.html)
 - [ROS2 KUKA drivers](https://github.com/kroshu/kuka_drivers/wiki)
