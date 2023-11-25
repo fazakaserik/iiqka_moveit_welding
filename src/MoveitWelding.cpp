@@ -55,13 +55,10 @@ int main(int argc, char * argv[])
   welding_node->addBreakPoint();
 
   // Welding
-
-  auto origin = Eigen::Isometry3d(
-    Eigen::Translation3d(0.3, 0.0, 0.2) * Eigen::Quaterniond( 0.0, 0.0, 1.0, 0.0)
-  );
+  auto origin = welding_node->moveGroupInterface()->getCurrentPose().pose;
 
   auto lin = Eigen::Isometry3d(
-    Eigen::Translation3d(0.7, 0.0, 0.0) * Eigen::Quaterniond( 0.0, 0.0, 1.0, 0.0)
+    Eigen::Translation3d(0.5, 0.0, 0.0) * Eigen::Quaterniond( 0.0, 0.0, 1.0, 0.0)
   );
 
   LinearMotion linearMotion(lin);

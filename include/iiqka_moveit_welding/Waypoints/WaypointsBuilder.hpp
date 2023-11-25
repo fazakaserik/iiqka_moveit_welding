@@ -10,6 +10,11 @@ private:
 
 public:
 
+    WaypointsBuilder(uint steps, const geometry_msgs::msg::Pose& origin)
+    {
+        waypoints_.set_zeros(steps);
+        waypoints_.set_origin(origin);
+    }
     WaypointsBuilder(uint steps, const Eigen::Isometry3d& origin)
     {
         waypoints_.set_zeros(steps);
