@@ -1,0 +1,13 @@
+lin:
+  translation:
+    x: 0.7
+    y: 0.0
+    z: 0.0
+  rotation:
+    x: 0.0
+    y: 0.0
+    z: 1.0
+    w: 0.0
+sin:
+  amplitude: 0.1
+  frequency: 1.0
