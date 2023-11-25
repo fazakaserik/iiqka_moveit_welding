@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build iiqka_moveit_welding",
+            "label": "Build",
             "type": "shell",
             "command": "echo 'Building package...' && colcon build",
             "options": {
@@ -11,7 +11,7 @@
             "problemMatcher": []
         },
         {
-            "label": "Lifecycle configure & activate iiqka_moveit_welding",
+            "label": "Lifecycle configure & activate",
             "type": "shell",
             "command": "ros2 lifecycle set robot_manager configure && ros2 lifecycle set robot_manager activate",
             "options": {
@@ -20,7 +20,7 @@
             "problemMatcher": []
         },
         {
-            "label": "Launch iiqka_moveit_welding",
+            "label": "Launch",
             "type": "shell",
             "command": "echo 'Sourcing package...' && source install/setup.bash && echo 'Launching RViz...' && ros2 launch iiqka_moveit_welding moveit_welding_planning.launch.py",
             "options": {
@@ -29,7 +29,7 @@
             "problemMatcher": []
         },
         {
-            "label": "Run iiqka_moveit_welding",
+            "label": "Run",
             "type": "shell",
             "command": "echo 'Sourcing package...' && source install/setup.bash && echo 'Running node...' && ros2 run iiqka_moveit_welding iiqka_moveit_welding",
             "options": {
