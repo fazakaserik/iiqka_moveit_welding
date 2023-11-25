@@ -1,4 +1,4 @@
-# Copyright 2022 Áron Svastits
+# Copyright 2023 Erik Fazakas
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -75,6 +75,6 @@ def generate_launch_description():
     launch_arguments = []
     launch_arguments.append(DeclareLaunchArgument(
         'robot_model',
-        default_value='lbr_iisy3_r760'
+        default_value='lbr_iisy11_r1300'
     ))
     return LaunchDescription(launch_arguments + [OpaqueFunction(function=launch_setup)])

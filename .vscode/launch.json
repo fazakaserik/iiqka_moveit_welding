@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Build and Source",
+            "type": "shell",
+            "request": "launch",
+            "command": "${command:workbench.action.tasks.runTask} 'build_and_source'"
+        }
+    ]
+}
+
+

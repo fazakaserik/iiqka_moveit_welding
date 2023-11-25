@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "echo 'Building package...' && colcon build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Launch",
+            "type": "shell",
+            "command": "echo 'Sourcing package...' && source install/setup.bash && echo 'Launching RViz...' && ros2 launch iiqka_moveit_welding moveit_welding_planning.launch.py",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Lifecycle configure & activate",
+            "type": "shell",
+            "command": "ros2 lifecycle set robot_manager configure && ros2 lifecycle set robot_manager activate",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run",
+            "type": "shell",
+            "command": "echo 'Sourcing package...' && source install/setup.bash && echo 'Running node...' && ros2 run iiqka_moveit_welding iiqka_moveit_welding",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
