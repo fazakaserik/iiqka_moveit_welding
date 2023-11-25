@@ -35,6 +35,10 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
             "problemMatcher": []
         }
     ]
