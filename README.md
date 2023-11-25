@@ -3,7 +3,7 @@
 This is a homework project for a KUKA & BME-VIK collaboration lecture. The goal of this project is to plan a superposed linear and sinusoidal trajectory for welding with a KUKA LBR iisy 11 robot.
 
 <p align="center">
-  <img src="docs/images/robot_welding.png" alt="Welding Robot">
+  <img src="docs/images/repo_cover.png" alt="Welding Robot">
 </p>
 
 # Dependencies
