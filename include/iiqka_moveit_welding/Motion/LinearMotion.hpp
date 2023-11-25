@@ -15,6 +15,24 @@ public:
     LinearMotion(const geometry_msgs::msg::Pose& goal)
         : goal_(goal) {}
 
+    LinearMotion(const Eigen::Isometry3d& goal)
+    {
+        geometry_msgs::msg::Pose pose;
+
+        Eigen::Translation3d trans(goal.translation());
+        pose.position.x = trans.x();
+        pose.position.y = trans.y();
+        pose.position.z = trans.z();
+
+        Eigen::Quaterniond quat(goal.rotation());
+        pose.orientation.x = quat.x();
+        pose.orientation.y = quat.y();
+        pose.orientation.z = quat.z();
+        pose.orientation.w = quat.w();
+
+        goal_ = pose;
+    }
+
     void apply(Waypoints& waypoints) override 
     {
         size_t vector_size = waypoints.vector.size();
