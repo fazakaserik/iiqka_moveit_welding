@@ -11,18 +11,18 @@
             "problemMatcher": []
         },
         {
-            "label": "Lifecycle configure & activate",
+            "label": "Launch",
             "type": "shell",
-            "command": "ros2 lifecycle set robot_manager configure && ros2 lifecycle set robot_manager activate",
+            "command": "echo 'Sourcing package...' && source install/setup.bash && echo 'Launching RViz...' && ros2 launch iiqka_moveit_welding moveit_welding_planning.launch.py",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
             "problemMatcher": []
         },
         {
-            "label": "Launch",
+            "label": "Lifecycle configure & activate",
             "type": "shell",
-            "command": "echo 'Sourcing package...' && source install/setup.bash && echo 'Launching RViz...' && ros2 launch iiqka_moveit_welding moveit_welding_planning.launch.py",
+            "command": "ros2 lifecycle set robot_manager configure && ros2 lifecycle set robot_manager activate",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
