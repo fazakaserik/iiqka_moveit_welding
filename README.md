@@ -76,3 +76,10 @@ Run the `src/MoveitWelding.cpp` robot program.
     "problemMatcher": []
 }
 ```
+
+# Documentation
+Documentation of the implementation can be found in the `docs` folder.
+
+| Language      | File |
+| :---        |    :----:   |
+| HU | [docs/HU.md](docs/HU.md) |

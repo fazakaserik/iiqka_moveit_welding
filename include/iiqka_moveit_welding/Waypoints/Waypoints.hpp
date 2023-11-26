@@ -6,7 +6,7 @@
 class Waypoints
 {
 public:
-    std::vector<geometry_msgs::msg::Pose> vector; // TODO initialize with relative zero elements (0 or current robot pose) so the builder can add to it
+    std::vector<geometry_msgs::msg::Pose> vector;
 
     // Constructor
     Waypoints() {}

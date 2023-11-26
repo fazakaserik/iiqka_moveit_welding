@@ -21,6 +21,7 @@
 #include "iiqka_moveit_welding/Waypoints/WaypointsBuilder.hpp"
 #include "iiqka_moveit_welding/Motion/LinearMotion.hpp"
 #include "iiqka_moveit_welding/Motion/SinusoidalMotion.hpp"
+#include <yaml-cpp/yaml.h>
 
 int main(int argc, char * argv[])
 {
@@ -57,12 +58,27 @@ int main(int argc, char * argv[])
   // Welding
   auto origin = welding_node->moveGroupInterface()->getCurrentPose().pose;
 
-  auto lin = Eigen::Isometry3d(
-    Eigen::Translation3d(0.5, 0.0, 0.0) * Eigen::Quaterniond( 0.0, 0.0, 1.0, 0.0)
-  );
+  YAML::Node config = YAML::LoadFile("config/trajectory.yaml");
 
+  auto lin = Eigen::Isometry3d(
+    Eigen::Translation3d(
+      config["lin"]["translation"]["x"].as<double>(), 
+      config["lin"]["translation"]["y"].as<double>(), 
+      config["lin"]["translation"]["z"].as<double>()
+    ) * 
+    Eigen::Quaterniond(
+      config["lin"]["rotation"]["x"].as<double>(),
+      config["lin"]["rotation"]["y"].as<double>(),
+      config["lin"]["rotation"]["z"].as<double>(),
+      config["lin"]["rotation"]["w"].as<double>()
+    )
+  );
   LinearMotion linearMotion(lin);
-  SinusoidalMotion sinusoidalMotion(0.1, 1.0);
+
+  SinusoidalMotion sinusoidalMotion(
+    config["sin"]["amplitude"].as<double>(), 
+    config["sin"]["frequency"].as<double>()
+  );
 
   WaypointsBuilder builder(100, origin);
   
